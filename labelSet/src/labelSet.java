@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -13,8 +14,12 @@ public class labelSet {
     private Scanner skener;
     public labelSet() {
         this.zoznamHran = new HashMap<>();
+        try {
+            this.citaj();
+        } catch (Exception e){
+            return;
 
-        this.citaj();
+        }
         this.prechadzaj();
 
 
@@ -23,9 +28,11 @@ public class labelSet {
 
     public void citaj() {
         try {
-            this.skener = new Scanner(new File("src/SlovRep.hrn"));
+            this.skener = new Scanner(new File("src/pr1.hrn"));
         } catch (FileNotFoundException e) {
+
             System.out.println("Súbor sa nenašiel");
+
         }
 
         var pocitadloPoradia = 1;
@@ -60,20 +67,24 @@ public class labelSet {
 
     public void prechadzaj(){
 
+
         this.skener = new Scanner(System.in);
         System.out.println("Zadaj začinajuci vrchol: ");
-        var zacinajuciVrchol = this.skener.nextInt();
+        var u = this.skener.nextInt();
         System.out.println("Zadaj koncový vrchol: ");
-        var koncovyVrchol = this.skener.nextInt();
+        var v = this.skener.nextInt();
 
 
-
+            //Vrcholy pri ktorych sa uz znacky nemenia
             var definitivneVrcholy = new ArrayList<Integer>();
+            //Aktualne najlepsie najdene ceny ciest d
             var najlepsieCeny = new HashMap<Integer, Integer>();
+            //Cesty ktore neboli vybrate z dôvodu vyberu cesty ktorá ma nižšiu cenu
             var zalozneCesty = new HashMap<Integer, Integer>();
 
-            najlepsieCeny.put(zacinajuciVrchol, 0);
-            var aktualnyVrchol = zacinajuciVrchol;
+
+            najlepsieCeny.put(u, 0);
+            var aktualnyVrchol = u;
 
             while(true) {
 
@@ -94,7 +105,7 @@ public class labelSet {
                     }
                 }
 
-                if(aktualnyVrchol == koncovyVrchol) {
+                if(aktualnyVrchol == v) {
                     break;
                 }
 
@@ -119,19 +130,19 @@ public class labelSet {
                 aktualnyVrchol = dalsiVrchol;
 
             }
-        System.out.println("Najkratsia vzdialenost z "+ zacinajuciVrchol + " do " + koncovyVrchol + " je " + najlepsieCeny.get(koncovyVrchol));
+        System.out.println("Najkratsia vzdialenost z "+ u + " do " + v + " je " + najlepsieCeny.get(v));
         var cesta = new ArrayList<Integer>();
 
-        var prvok = koncovyVrchol;
+        var prvok = v;
 
-        while (prvok != zacinajuciVrchol){
+        while (prvok != u){
 
             cesta.add(0, prvok);
             prvok = zalozneCesty.get(prvok);
 
         }
 
-        cesta.add(0, zacinajuciVrchol);
+        cesta.add(0, u);
         System.out.print("(");
         for(var hodnota : cesta){
             if(cesta.indexOf(hodnota) == cesta.size() -1){
