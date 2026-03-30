@@ -27,8 +27,11 @@
     
     
         public void citaj() {
+            this.skener = new Scanner(System.in);
+            System.out.println("Zadaj názov súboru: ");
+            var nazov = "src/" + this.skener.nextLine();
             try {
-                this.skener = new Scanner(new File("src/pr1.hrn"));
+                this.skener = new Scanner(new File(nazov));
             } catch (FileNotFoundException e) {
     
                 System.out.println("Súbor sa nenašiel");
